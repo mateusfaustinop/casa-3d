@@ -203,16 +203,33 @@
 
   <div id="status">Ambiente: entrada</div>
 
+  <script>
+    // Show a readable message instead of a black screen if a module/CDN fails.
+    window.addEventListener('error', function (e) {
+      const app = document.getElementById('app');
+      if (app && !app.dataset.ready) {
+        app.innerHTML = '<div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;padding:28px;background:#111;color:white;font:16px -apple-system,Arial;text-align:center"><div><b>Falha ao carregar o motor 3D.</b><br><br>Atualize a página com internet ativa. Se persistir, avise o erro: '+ String(e.message || 'módulo 3D') +'</div></div>';
+      }
+    });
+  </script>
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+    }
+  }
+  </script>
   <script type="module">
-    import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js';
-    import { OrbitControls } from 'https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/controls/OrbitControls.js';
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
     const app = document.getElementById('app');
     const statusEl = document.getElementById('status');
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xbcd6f1);
-    scene.fog = new THREE.Fog(0xbcd6f1, 35, 85);
+    scene.background = new THREE.Color(0xcfe4f5);
+    scene.fog = new THREE.Fog(0xcfe4f5, 42, 95);
 
     const camera = new THREE.PerspectiveCamera(68, window.innerWidth / window.innerHeight, 0.1, 200);
     camera.position.set(0, 2.2, -18);
@@ -224,6 +241,7 @@
     renderer.shadowMap.enabled = true;
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     app.appendChild(renderer.domElement);
+    app.dataset.ready = '1';
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
